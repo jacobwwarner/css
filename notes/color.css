@@ -1,0 +1,37 @@
+
+
+:root {
+    --pool-water: rgb(0 128 250);
+
+    --indigo: oklch(56.6% 0.27 274);
+    
+    /* Relative Color Palettes */
+    --c-base: 0.05;
+
+    --indigo-10: oklch(from var(--indigo) 10% calc(var(--c-base) + sin(0.09 * pi) * c) h);
+    --indigo-20: oklch(from var(--indigo) 20% calc(var(--c-base) + sin(0.18 * pi) * c) h);
+    --indigo-30: oklch(from var(--indigo) 30% calc(var(--c-base) + sin(0.27 * pi) * c) h);
+    --indigo-40: oklch(from var(--indigo) 40% calc(var(--c-base) + sin(0.36 * pi) * c) h);
+    --indigo-50: oklch(from var(--indigo) 50% calc(var(--c-base) + sin(0.45 * pi) * c) h);
+    --indigo-60: oklch(from var(--indigo) 60% calc(var(--c-base) + sin(0.54 * pi) * c) h);
+    --indigo-70: oklch(from var(--indigo) 70% calc(var(--c-base) + sin(0.63 * pi) * c) h);
+    --indigo-80: oklch(from var(--indigo) 80% calc(var(--c-base) + sin(0.72 * pi) * c) h);
+    --indigo-90: oklch(from var(--indigo) 90% calc(var(--c-base) + sin(0.81 * pi) * c) h);
+    --indigo-100: oklch(from var(--indigo) 100% calc(var(--c-base) + sin(0.90 * pi) * c) h);
+}
+
+/* How to check if browser support for the oklch() value, otherwise revert to default. */
+@supports (color: oklch(61% 0.206 255)) {
+    :root {
+        --pool-water: oklch(61% 0.206 255);
+
+
+    }
+}
+
+.pool {
+    --background-color: var(--pool-water);
+}
+
+/* Gradients */
+/* linear-gradient(in oklch to right, oklch(70% 0.315 345), oklch(70% 0.18 231)) */

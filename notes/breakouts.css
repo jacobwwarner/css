@@ -1,0 +1,103 @@
+
+/* Kevin Powell's implementation */
+@layer using-grid {
+  .primary-layout {
+    /* User Settings */
+    --padding-inline: 1rem;
+    --content-max-width: 55ch;
+    --narrow-size-reduction: 60px;
+    --popout-extra-distance: 60px;
+    --breakout-extra-distance: 120px;
+  
+    /* For Calculations */
+    --_narrow-column-size: calc(
+      (var(--content-max-width) - var(--narrow-size-reduction)) / 2
+    );
+    --_content-column-size: var(--narrow-size-reduction);
+    --_breakout-column-size: calc(
+      var(--breakout-extra-distance) - var(--popout-extra-distance)
+    );
+
+    display: grid;
+    grid-template-columns: 
+      [full-width-start] minmax(var(--padding-inline), 1fr)
+      [breakout-start] minmax(0, var(--_breakout-column-size))
+      [popout-start] minmax(0, var(--popout-extra-distance))
+      [content-start] minmax(0, var(--_content-column-size))
+      [narrow-start] 
+        min(var(--_narrow-column-size), 100% - var(--padding-inline))
+      [narrow-end]
+      minmax(0, var(--_content-column-size)) [content-end]
+      minmax(0, var(--popout-extra-distance)) [popout-end]
+      minmax(0, var(--_breakout-column-size)) [breakout-end]
+      minmax(var(--padding-inline), 1fr) [full-width-end];
+  }
+
+  /* There's a bunch of class that come after here but are missing... */
+}
+
+/* Start Vercel tool implementation... */
+.page-layout > *, .full-width > * {
+    grid-column: content;
+}
+  
+.page-layout, .full-width {
+  --minimum-content-padding: 2rem;
+  
+  /** TRACK WIDTHS **/
+  --full-max-width: 1fr;
+  --popout-max-width: 1400px;
+  --content-max-width: 1060px;
+  --inset-content-max-width: 840px;
+  
+  /** TRACK SIZES **/
+  --full: minmax( var(--minimum-content-padding), 1fr );
+  --popout: minmax( 0, calc( ( var(--popout-max-width) - var(--content-max-width)) * 0.5 ) );
+  --content: minmax( 0, calc( ( var(--content-max-width) - var(--inset-content-max-width)) * 0.5 ) );
+  --inset-content: min( var(--inset-content-max-width), 100% - var(--minimum-content-padding) * 2 );
+  
+  display: grid;
+  grid-template-columns: 
+    [full-start]
+    var(--full)
+      [popout-start]
+      var(--popout)
+        [content-start]
+        var(--content)
+          [inset-content-start]
+          var(--inset-content)
+          [inset-content-end]
+        var(--content)
+        [content-end]
+      var(--popout)
+      [popout-end]
+    var(--full)
+    [full-end];
+}
+  
+/** CLASSES **/
+.full { grid-column: full; }
+.full-start { grid-column-start: full-start; }
+.full-end { grid-column-end: full-end; }
+
+.popout { grid-column: popout; }
+.popout-start { grid-column-start: popout-start; }
+.popout-end { grid-column-end: popout-end; }
+
+.content { grid-column: content; }
+.content-start { grid-column-start: content-start; }
+.content-end { grid-column-end: content-end; }
+
+.inset-content { grid-column: inset-content; }
+.inset-content-start { grid-column-start: inset-content-start; }
+.inset-content-end { grid-column-end: inset-content-end; }
+
+.full-width { grid-column: full; }
+.full-content, .full-content-nopad { grid-column: full; }
+.full-content { padding-inline: var(--minimum-content-padding); }
+/* ... end Vercel tool implementation. */
+
+/* Resources:
+  - "Start over-engineering your CSS | Kevin Powell | CSS Day 2024" (https://youtu.be/k_3pRxdv-cI?si=8GD8C5cb3FdTtdpk)
+  - Andrew Walpole's version (https://layout-breakouts-builder.vercel.app/)
+*/

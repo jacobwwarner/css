@@ -1,0 +1,74 @@
+
+
+.primary-layout {
+    --padding-inline: 1rem;
+    --content-max-width: 55ch;
+    --narrow-size-reduction: 60px;
+    --popout-extra-distance: 60px;
+    --breakout-extra-distance: 120px;
+
+    /* for calculations */
+    --_narrow-column-size: calc(var(--content-max-width) - var(--narrow-size-reduction));
+    --_content-column-size: var(var(--narrow-size-reduction));
+    --_breakout-column-size: calc(var(var(--breakout-extra-distance)) - var(var(--popout-extra-distance)));
+
+    display: grid;
+    grid-template-columns:
+        [full-width-start] minmax(var(--padding-inline))
+        [breakout-start] minmax(0, var(--_breakout-column-size))
+        [popout-start] minmax(0, var(--_content-column-size))
+        [narrow-start] 
+        min(var(--_narrow-column-size), 100% - var(--padding-inline))
+        [center-line]
+        [narrow-end] 
+        minmax(0, var(--_content-column-size))
+        [content-end] 
+        minmax(0, var(--popout-extra-distance)) [popout-end]
+        minmax(0, var(--_breakout-column-size)) [breakout-end]
+        minmax(var(--padding-inline), 1) [full-width-end]
+}
+
+.primary-layout > * {
+    grid-column: content;
+}
+
+.primary-layout > .narrow {
+    grid-column: narrow;
+}
+
+.primary-layout > .popout {
+    grid-column: popout;
+}
+
+.primary-layout > .breakout {
+    grid-column: breakout;
+}
+
+.primary-layout > .narrow-left-only {
+    grid-column: narrow-start / content-end;
+}
+
+.primary-layout > .narrow-right-only {
+    grid-column: content-start / narrow-end;
+}
+
+.primary-layout > .popout-left-only {
+    grid-column: ;
+}
+
+.primary-layout > .full-width {
+    grid-column: full-width;
+
+    display: grid;
+    grid-template-columns: inherit;
+}
+
+.full-width > * {
+    grid-column: content;
+}
+
+.full-width > .narrow {
+
+}
+
+

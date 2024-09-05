@@ -1,0 +1,108 @@
+@property --100vw {
+    syntax: "<length>";
+    initial-value: 0px;
+    inherits: false;
+}
+
+:root {
+    --100vw: 100vw;
+    --baseFontSizeMin: 1rem;
+    --ratioMin: var(--minorSecond);
+    --minWidth: 320;
+    
+    --baseFontSizeMax: 1.3125rem;
+    --ratioMax: var(--augmentedFourth);
+    --maxWidth: 1600;
+
+    /* Ratios */
+    --minorSecond: 1.06666; /* Semitone: 16:15 */
+    --majorSecond: 1.125; /* 9:8 */
+    --minorThird: 1.2; /* 6:5 */
+    --majorThird: 1.25; /* 5:4 */
+    --perfectFourth: 1.33333; /* 4:3 */
+    --augmentedFourth: 1.414; /* √2/1 */
+    --perfectFifth: 1.5; /* 3:2 */
+    --minorSixth: 1.6; /* 8:5 */
+    --goldenRatio: 1.618; /* (1+√5):2 */
+    --majorSixth: 1.66666; /* 5:3 */
+    --minorSeventh: 1.8; /* 9:5 */
+    --majorSeventh: 1.875; /* 15:8 */
+    --octave: 2; /* 2:1 */
+
+    /* Current viewport width in pixels without a unit */
+        /* --currentWidth: calc(100vw / 1vw); -- Not supported in any browser, although the spec would allow for it. */
+        /* We are usign the property we declared as a <length>, so 100vw is correctly converted into px. */
+    --currentWidth: clamp(var(--minWidth), tan(atan2(var(--100vw), 1px)), var(--maxWidth));
+
+    /*  This normalizes the value between 0 and 1 */
+    --x: clamp(0, calc( (var(--currentWidth) - var(--minWidth)) / (var(--maxWidth) - var(--minWidth)) ), 1);
+
+    /* Now we can put our x into the easing sine functions... */
+    /* EaseOutSine - https://easings.net/#easeOutSine  */
+    --easeOutSine: sin((var(--x) * pi) / 2);
+    /* EaseOutQuad - https://easings.net/#easeOutQuad */
+    --easeOutQuad: calc(1 - (1 - var(--x)) * (1 - var(--x)));
+    /* EaseInOutSine - https://easings.net/#easeInOutSine */
+    --easeInOutSine: calc(-(cos(pi * var(--x)) - 1) / 2);
+
+    /* Which curve do we want to use? */ /* Current Selection: Rapid, then slowing, font size scaling */
+    --curve: var(--easeOutSine);
+
+    /* Min and max sizes of the scales are calculated based on the provided ratio with pow():
+     https://developer.mozilla.org/en-US/docs/Web/CSS/pow */
+
+    /* Scale min */
+    --size-min-4: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), 4));
+    --size-min-3: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), 3));
+    --size-min-2: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), 2));
+    --size-min-1: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), 1));
+    --size-min-0: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), 0));
+    --size-min--1: calc(var(--baseFontSizeMin) * pow(var(--ratioMin), -1));
+
+    /* Scale max */
+    --size-max-4: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), 4));
+    --size-max-3: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), 3));
+    --size-max-2: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), 2));
+    --size-max-1: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), 1));
+    --size-max-0: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), 0));
+    --size-max--1: calc(var(--baseFontSizeMax) * pow(var(--ratioMax), -1));
+
+    /* ...and calculate our fluid font-sizes with clamp() */
+    --fluid-4: clamp(var(--size-min-4), ( var(--size-min-4) + ( var(--curve) * var(--size-max-4) - var(--size-min-4)) ), var(--size-max-4));
+    --fluid-3: clamp(var(--size-min-4), ( var(--size-min-4) + ( var(--curve) * var(--size-max-4) - var(--size-min-4)) ), var(--size-max-4));
+    --fluid-2: clamp(var(--size-min-4), ( var(--size-min-4) + ( var(--curve) * var(--size-max-4) - var(--size-min-4)) ), var(--size-max-4));
+    --fluid-1: clamp(var(--size-min-4), ( var(--size-min-4) + ( var(--curve) * var(--size-max-4) - var(--size-min-4)) ), var(--size-max-4));
+    --fluid-0: clamp(var(--size-min-4), ( var(--size-min-4) + ( var(--curve) * var(--size-max-4) - var(--size-min-4)) ), var(--size-max-4));
+    
+}
+
+h1 {
+    font-size: var(--fluid-4);
+}
+
+h2 {
+    font-size: var(--fluid-3);
+}
+
+h3 {
+    font-size: var(--fluid-2);
+}
+
+h4 {
+    font-size: var(--fluid-1);
+}
+
+h5 {
+    font-size: var(--fluid-0);
+}
+
+p {
+    font-size: var(--fluid-0);
+    line-height: 1.5;
+    margin-bottom: 1em;
+}
+
+/* Resources
+    - "Web Design Engineering With The New CSS | Matthis Ott | CSS Day 2024" (https://youtu.be/su6WA0kUUJE?si=tZMWImEcfTMEQLrG)
+    - Utopia (https://utopia.fyi/) - fluid responsive design
+*/
